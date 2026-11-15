@@ -1,0 +1,21 @@
+{
+  "seed": 4418,
+  "checkpoint": "qwen_image_2.1_int8_convrot.safetensors",
+  "kinds": {
+    "person": {
+      "label": "Person",
+      "width": 1056, "height": 1584,
+      "prompt": "The person from Picture 1, shown once, as a full-body reference for a 3D model: standing upright facing the camera, the whole body in frame from the top of the head to the shoes, with space around, centered. The arms hang straight and are held a little away from the sides, hands open with fingers apart, feet shoulder width apart. Calm neutral expression, mouth closed, looking at the camera. Same face, hair and outfit as Picture 1. Straight-on view at chest height. Plain flat light grey studio background, soft even lighting from all sides. No props, no floor line, no cast shadow, no text, only one figure."
+    },
+    "head": {
+      "label": "Head",
+      "width": 1328, "height": 1328,
+      "prompt": "The person from Picture 1, shown once, as a close head-and-shoulders reference for a 3D model: only the head, neck and the tops of the shoulders, the head filling most of the frame, facing the camera straight on, centered, with a little space around the hair. Head level, calm neutral expression, mouth closed, eyes open and looking at the camera. Same face, hair and outfit as Picture 1. Straight-on view at eye height. Plain flat light grey studio background, soft even lighting from all sides. No hands in frame, no props, no cast shadow, no text, only one figure."
+    },
+    "creature": {
+      "label": "Creature or object",
+      "width": 1328, "height": 1328,
+      "prompt": "The subject from Picture 1, shown once and complete, as a reference for a 3D model: the whole subject inside the frame with space around it, centered, in a compact resting pose with nothing reaching out of frame and no part hidden behind another. Same shape, surface and colours as Picture 1. Three-quarter front view. Plain flat light grey studio background, soft even lighting from all sides. No dust, no glow, no sparks, no ground, no cast shadow, no text, only one subject."
+    }
+  }
+}

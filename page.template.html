@@ -1,0 +1,209 @@
+<title>{{TITLE}} 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column. The model on its stage comes first and takes most of the screen;
+   the numbers and the texture maps sit below it as a quiet spec sheet. */
+:root {
+  --ground: #e8eae3;
+  --stage-a: #f4f5f0;
+  --stage-b: #cfd3c7;
+  --ink: #1c2019;
+  --muted: #586052;
+  --line: #c2c7b8;
+  --moss: #4f6a1e;
+  --panel: #f6f7f2;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #131611; --stage-a: #2a2f26; --stage-b: #161914; --ink: #e7eadf; --muted: #9ea793;
+    --line: #30362a; --moss: #a9c860; --panel: #1b1f18; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #131611; --stage-a: #2a2f26; --stage-b: #161914; --ink: #e7eadf; --muted: #9ea793;
+  --line: #30362a; --moss: #a9c860; --panel: #1b1f18; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background: var(--ground); color: var(--ink); font: 400 16px/1.55 var(--body);
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-direction: column; gap: 4px; }
+h1 { font: 700 clamp(28px, 6vw, 44px)/1.05 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+h2 { font: 600 13px/1.2 var(--body); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin: 0; }
+
+.stage {
+  position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: 74vh; max-width: 100%;
+  border-radius: 6px; overflow: hidden; border: 1px solid var(--line);
+  background: radial-gradient(ellipse at 50% 42%, var(--stage-a), var(--stage-b) 78%);
+}
+@media (min-width: 720px) { .stage { aspect-ratio: 16 / 10; } }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline-offset: -3px; }
+.stage canvas:active { cursor: grabbing; }
+.stage canvas:focus-visible { outline: 2px solid var(--moss); }
+.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0.55; transition: opacity 0.5s; }
+.stage.ready .poster { opacity: 0; pointer-events: none; }
+.status {
+  position: absolute; left: 12px; top: 12px; font: 500 12px/1.3 var(--mono); color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); padding: 6px 9px; border-radius: 4px; max-width: calc(100% - 24px);
+}
+.controls { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+button {
+  font: 500 14px/1 var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  padding: 10px 14px; border-radius: 4px; cursor: pointer; min-height: 40px;
+}
+button:hover { border-color: var(--moss); }
+button:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+button[aria-pressed="true"] { border-color: var(--moss); color: var(--moss); }
+.hint { position: absolute; left: 12px; top: 12px; font: 400 12px/1.3 var(--mono); color: var(--muted); max-width: calc(100% - 24px); }
+
+.specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; margin: 0; border-top: 1px solid var(--line); }
+.specs div { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.specs dt { font: 400 12px/1.3 var(--mono); color: var(--muted); }
+.specs dd { margin: 2px 0 0; font: 600 18px/1.25 var(--display); font-variant-numeric: tabular-nums; }
+
+section { display: flex; flex-direction: column; gap: 10px; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+figure img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 1px solid var(--line); border-radius: 4px; display: block; background: var(--panel); }
+figure img.wide { aspect-ratio: 2 / 1; object-fit: contain; }
+figcaption { font: 400 13px/1.35 var(--body); color: var(--muted); }
+figcaption b { color: var(--ink); font-weight: 600; display: block; }
+.src { max-width: 420px; }
+.src img { aspect-ratio: auto; object-fit: contain; }
+.note { margin: 0; color: var(--muted); max-width: 65ch; font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .poster { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>{{TITLE}}, in 3D</h1>
+    <p class="lede">One picture turned into a solid model you can turn around. Drag to spin it, pinch or scroll to zoom.</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <img class="poster" src="{{HERO}}" alt="The picture the model was built from">
+    <canvas id="view" tabindex="0" aria-label="3D model of {{TITLE}}. Drag to rotate, pinch or scroll to zoom."></canvas>
+    <div class="status" id="status" role="status">Loading the model…</div>
+    <div class="hint" id="hint" hidden>Drag to turn · pinch to zoom</div>
+    <div class="controls">
+      <button type="button" id="spin" aria-pressed="true">Pause spin</button>
+      <button type="button" id="reset">Reset view</button>
+    </div>
+  </div>
+
+  <dl class="specs">
+    <div><dt>On this page</dt><dd>{{TRIS}} triangles</dd></div>
+    <div><dt>Full-quality model</dt><dd>{{FULL_TRIS}} triangles</dd></div>
+    <div><dt>Textures</dt><dd>4K colour, 2K normal</dd></div>
+    <div><dt>Build time</dt><dd>{{BUILD}}</dd></div>
+  </dl>
+
+  <section>
+    <h2>Made from one picture</h2>
+    <figure class="src"><img src="{{HERO}}" alt="The source picture"><figcaption><b>Source picture</b>The only input. Everything you cannot see in it, such as the back, is the model's guess.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Texture maps</h2>
+    <div class="tiles">
+      <figure><img src="{{MAP_COLOR}}" alt="Colour map"><figcaption><b>Colour</b>Surface colour.</figcaption></figure>
+      <figure><img src="{{MAP_NORMAL}}" alt="Normal map"><figcaption><b>Normal</b>Fine surface detail.</figcaption></figure>
+      <figure><img src="{{MAP_AO}}" alt="Ambient occlusion map"><figcaption><b>Occlusion</b>Shade in the creases.</figcaption></figure>
+    </div>
+    {{NOTE}}
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script>
+(function () {
+  var stage = document.getElementById('stage'), canvas = document.getElementById('view');
+  var statusEl = document.getElementById('status'), hint = document.getElementById('hint');
+  var spinBtn = document.getElementById('spin'), resetBtn = document.getElementById('reset');
+  function fail(msg) { statusEl.hidden = false; statusEl.textContent = msg; }
+  if (!window.THREE || !THREE.GLTFLoader || !THREE.OrbitControls) { fail('The 3D viewer could not load. Reload the page to try again.'); return; }
+
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
+  catch (e) { fail('This browser could not start 3D graphics, so the picture is shown instead.'); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.LinearToneMapping;   /* plain mapping keeps the texture's own colours */
+  renderer.toneMappingExposure = 0.5;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+  if (THREE.RoomEnvironment) {
+    var pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  } else {
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x444433, 1.1));
+  }
+  var key = new THREE.DirectionalLight(0xfff4e0, 0.7); key.position.set(2.5, 4, 3); scene.add(key);
+
+  var controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08; controls.enablePan = false;
+  controls.autoRotateSpeed = 2.2;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var home = { pos: new THREE.Vector3(), target: new THREE.Vector3() }, fit = null, touched = false;
+
+  function setSpin(on) {
+    controls.autoRotate = on; spinBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    spinBtn.textContent = on ? 'Pause spin' : 'Spin';
+  }
+  setSpin(!reduce);
+  spinBtn.addEventListener('click', function () { setSpin(!controls.autoRotate); });
+  resetBtn.addEventListener('click', function () { touched = false; camera.position.copy(home.pos); controls.target.copy(home.target); controls.update(); });
+
+  function resize() {
+    var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); if (fit) fit();
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize', resize);
+  resize();
+
+  new THREE.GLTFLoader().load('model.json', function (gltf) {
+    var model = gltf.scene, box = new THREE.Box3().setFromObject(model);
+    var size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    model.traverse(function (o) { if (o.isMesh && o.material && o.material.map) o.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy(); });
+    scene.add(model);
+    /* Frame the model exactly: tall subjects (people) are seen from the front at eye level, others from a raised three-quarter view. */
+    var dir = new THREE.Vector3(0.3, 0.08, 0.95).normalize();   /* a little off the view the source picture was taken from */
+      var right = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), dir).normalize(), up = new THREE.Vector3().crossVectors(dir, right);
+    var radius = size.length() / 2, hx = size.x / 2, hy = size.y / 2, hz = size.z / 2;
+    fit = function () {
+      var t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 0.88, dist = 0, c = new THREE.Vector3();
+      for (var i = 0; i < 8; i++) {
+        c.set(i & 1 ? hx : -hx, i & 2 ? hy : -hy, i & 4 ? hz : -hz);
+        dist = Math.max(dist, c.dot(dir) + Math.abs(c.dot(up)) / t, c.dot(dir) + Math.abs(c.dot(right)) / (t * camera.aspect));
+      }
+      home.pos.copy(dir).multiplyScalar(dist); home.target.set(0, 0, 0);
+      controls.minDistance = radius * 0.4; controls.maxDistance = dist * 2.2;
+      if (!touched) { camera.position.copy(home.pos); controls.target.copy(home.target); }
+      controls.update();
+    };
+    fit();
+    stage.classList.add('ready'); statusEl.hidden = true; hint.hidden = false;
+  }, function (ev) {
+    if (ev && ev.total) statusEl.textContent = 'Loading the model… ' + Math.round(ev.loaded / ev.total * 100) + '%';
+    else if (ev && ev.loaded) statusEl.textContent = 'Loading the model… ' + (ev.loaded / 1048576).toFixed(1) + ' of {{GLB_MB}} MB';
+  }, function () { fail('The model did not load. Reload the page to try again.'); });
+
+  canvas.addEventListener('pointerdown', function () { hint.hidden = true; touched = true; });
+  canvas.addEventListener('wheel', function () { touched = true; }, { passive: true });
+  (function tick() { requestAnimationFrame(tick); controls.update(); renderer.render(scene, camera); })();
+})();
+</script>

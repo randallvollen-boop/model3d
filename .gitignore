@@ -1,0 +1,3 @@
+# Built models are large (GLB, textures); they stay on disk, not in git.
+models/
+__pycache__/

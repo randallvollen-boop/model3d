@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D Models</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* One column, phone first. The picture is the main element of every screen;
+   each state shows at most two actions, the rest sit in the ... menu. Same palette as the spin pages. */
+:root {
+  --ground: #e8eae3; --stage-a: #f4f5f0; --stage-b: #cfd3c7; --ink: #1c2019; --muted: #586052;
+  --line: #c2c7b8; --moss: #4f6a1e; --on-moss: #f6f7f2; --panel: #f6f7f2; --warn: #8a3b12;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ground: #131611; --stage-a: #2a2f26; --stage-b: #161914; --ink: #e7eadf; --muted: #9ea793;
+    --line: #30362a; --moss: #a9c860; --on-moss: #131611; --panel: #1b1f18; --warn: #e79a6c; color-scheme: dark; }
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 16px/1.5 var(--body); padding-block: 16px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+h1 { font: 700 28px/1.1 var(--display); letter-spacing: -0.02em; margin: 0; }
+h1 a { color: inherit; text-decoration: none; }
+h2 { font: 700 22px/1.15 var(--display); letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+section, form { display: flex; flex-direction: column; gap: 14px; }
+a { color: var(--moss); }
+
+button, .btn { font: 500 15px/1 var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+  padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; }
+button:hover, .btn:hover { border-color: var(--moss); }
+button:focus-visible, .btn:focus-visible, input:focus-visible, .card:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.go { background: var(--moss); border-color: var(--moss); color: var(--on-moss); font-weight: 600; }
+button[aria-disabled="true"] { opacity: 0.45; cursor: default; }
+.icon { width: 44px; padding: 0; }
+.icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.alert { margin: 0; padding: 10px 12px; border: 1px solid var(--warn); color: var(--warn); border-radius: 4px; background: var(--panel); }
+.note { margin: 0; color: var(--muted); min-height: 1.5em; }
+.note b { color: var(--ink); font-weight: 600; }
+.note.bad { color: var(--warn); }
+.mono { font: 400 13px/1.4 var(--mono); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.card { display: flex; flex-direction: column; gap: 6px; color: var(--ink); text-decoration: none; min-width: 0; }
+.card .frame, .stage { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, var(--stage-a), var(--stage-b) 78%); }
+.card .frame { aspect-ratio: 1 / 1; }
+.card img, .stage img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.card:hover .frame { border-color: var(--moss); }
+.card .name { font: 600 15px/1.25 var(--body); overflow-wrap: anywhere; }
+.card .st { font: 400 12px/1.3 var(--mono); color: var(--muted); }
+.card .st.live { color: var(--moss); }
+
+.stage { width: 100%; aspect-ratio: 1 / 1; max-height: 62vh; }
+.thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumbs img { width: 64px; height: 64px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+.thumbs:empty { display: none; }
+
+label.field { display: flex; flex-direction: column; gap: 6px; font-weight: 500; }
+input[type="text"] { font: 400 16px/1.2 var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 0 12px; min-height: 44px; width: 100%; }
+fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+legend { font-weight: 500; padding: 0; margin-bottom: 6px; }
+.pick { display: flex; gap: 8px; flex-wrap: wrap; }
+.pick button[aria-pressed="true"] { border-color: var(--moss); color: var(--moss); font-weight: 600; }
+
+.actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; position: relative; }
+.actions .grow { flex: 1 1 auto; }
+.actions .ask { flex: 1 1 100%; margin: 0; }
+.menu { position: absolute; right: 0; bottom: 52px; z-index: 5; display: flex; flex-direction: column; min-width: 210px; padding: 4px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18); }
+.menu button { border: 0; background: none; justify-content: flex-start; min-height: 44px; }
+.menu button:hover { color: var(--moss); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><a href="#">3D Models</a></h1>
+    <a class="btn icon" id="add" href="#new" aria-label="New model"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
+  </header>
+  <p class="alert" id="alert" role="alert" hidden></p>
+
+  <section id="list">
+    <div class="grid" id="grid"></div>
+    <p class="note" id="empty" hidden>No models yet. Tap + and add a picture of a character, creature or object.</p>
+  </section>
+
+  <form id="new" hidden novalidate>
+    <h2>New model</h2>
+    <label class="field">Name <input type="text" id="title" maxlength="60" autocomplete="off"></label>
+    <fieldset><legend>What it shows</legend><div class="pick" id="kinds"></div></fieldset>
+    <fieldset><legend>Reference pictures (1 to 3)</legend>
+      <div class="thumbs" id="thumbs"></div>
+      <div><label class="btn" for="files">Add pictures</label><input type="file" id="files" accept="image/*" multiple hidden></div>
+    </fieldset>
+    <p class="note" id="newnote"></p>
+    <div class="actions"><button class="go" id="create" type="submit">Create</button><a class="btn" href="#">Cancel</a></div>
+  </form>
+
+  <section id="one" hidden>
+    <h2 id="otitle"></h2>
+    <div class="stage"><img id="opic" alt=""></div>
+    <div class="thumbs" id="orefs"></div>
+    <p class="note" id="onote" aria-live="polite"></p>
+    <div class="actions" id="oact"></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var LABEL = { draft: 'Needs a picture', picturing: 'Making the picture', review: 'Check the picture', building: 'Building', built: 'Built' };
+  var DOTS = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>';
+  var cur = null, asking = false, menuOpen = false, trashArmed = false, ready = null, timer = null, picked = [], kind = null;
+
+  function api(path, opts) {
+    return fetch(path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'The page could not reach the server (' + r.status + ').');
+        return j;
+      });
+    });
+  }
+  function fail(e) { $('alert').textContent = e.message || String(e); $('alert').hidden = false; }
+  function clearAlert() { $('alert').hidden = true; }
+  function clock(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function button(text, cls, fn) { var b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', fn); return b; }
+
+  /* ---------- list ---------- */
+  function showList() {
+    api('/api/models').then(function (ms) {
+      var g = $('grid'); g.textContent = ''; $('empty').hidden = ms.length > 0;
+      ms.forEach(function (m) {
+        var a = el('a', 'card'); a.href = m.state === 'built' ? '/m/' + m.slug + '/' : '#m-' + m.slug;
+        var f = el('div', 'frame'), i = el('img'); i.alt = ''; i.loading = 'lazy'; i.src = '/pic/' + m.slug + '/best?px=480&v=' + m.stamp; f.appendChild(i);
+        var live = m.state === 'picturing' || m.state === 'building';
+        a.appendChild(f); a.appendChild(el('span', 'name', m.title)); a.appendChild(el('span', 'st' + (live ? ' live' : ''), m.error ? 'Stopped' : LABEL[m.state]));
+        g.appendChild(a);
+      });
+      if (ms.some(function (m) { return m.state === 'picturing' || m.state === 'building'; })) timer = setTimeout(showList, 5000);
+    }).catch(fail);
+  }
+
+  /* ---------- new ---------- */
+  function newNote() {
+    var miss = !$('title').value.trim() ? 'Give it a name.' : !kind ? 'Pick what it shows.' : !picked.length ? 'Add at least one picture.' : '';
+    $('newnote').textContent = miss || 'The first picture is the main one.'; $('create').setAttribute('aria-disabled', miss ? 'true' : 'false'); return miss;
+  }
+  function showNew() {
+    picked = []; kind = null; $('title').value = ''; $('thumbs').textContent = ''; $('files').value = '';
+    api('/api/kinds').then(function (ks) {
+      var box = $('kinds'); box.textContent = '';
+      ks.forEach(function (k) {
+        var b = button(k.label, '', function () { kind = k.id; Array.prototype.forEach.call(box.children, function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); }); newNote(); });
+        b.setAttribute('aria-pressed', 'false'); box.appendChild(b);
+      });
+    }).catch(fail);
+    newNote();
+  }
+  $('title').addEventListener('input', newNote);
+  $('files').addEventListener('change', function () {
+    picked = picked.concat(Array.prototype.slice.call(this.files)).slice(0, 3); this.value = '';
+    var t = $('thumbs'); t.textContent = '';
+    picked.forEach(function (f) { var i = el('img'); i.alt = f.name; i.src = URL.createObjectURL(f); t.appendChild(i); });
+    newNote();
+  });
+  $('new').addEventListener('submit', function (ev) {
+    ev.preventDefault(); if (newNote()) return;
+    var fd = new FormData(); fd.append('title', $('title').value.trim()); fd.append('kind', kind);
+    picked.forEach(function (f) { fd.append('pictures', f, f.name); });
+    $('newnote').textContent = 'Uploading.'; $('create').setAttribute('aria-disabled', 'true');
+    api('/api/models', { method: 'POST', body: fd }).then(function (m) { location.hash = 'm-' + m.slug; }).catch(function (e) { fail(e); newNote(); });
+  });
+
+  /* ---------- one model ---------- */
+  function act(what) {
+    clearAlert(); asking = false; menuOpen = false; trashArmed = false;
+    return api('/api/models/' + cur.slug + '/' + what, { method: 'POST' }).then(function (m) {
+      if (what === 'trash') { location.hash = ''; return; }
+      draw(m);
+    }).catch(function (e) { fail(e); refresh(); });
+  }
+  function menu(items) {
+    var wrap = document.createDocumentFragment(), b = button('', 'icon', function (ev) { ev.stopPropagation(); menuOpen = !menuOpen; trashArmed = false; draw(cur); });
+    b.innerHTML = DOTS; b.setAttribute('aria-label', 'More'); b.setAttribute('aria-expanded', menuOpen ? 'true' : 'false'); wrap.appendChild(b);
+    if (menuOpen) { var m = el('div', 'menu'); items.forEach(function (it) { m.appendChild(button(it[0], '', function (ev) { ev.stopPropagation(); it[1](); })); }); wrap.appendChild(m); }
+    return wrap;
+  }
+  var trashItem = function () { return [trashArmed ? 'Tap again to move to trash' : 'Move to trash', function () { if (trashArmed) act('trash'); else { trashArmed = true; draw(cur); } }]; };
+  var asIsItem = ['Use my picture as is', function () { act('as-is'); }];
+
+  function draw(m) {
+    if (m.state === 'built') { location.href = '/m/' + m.slug + '/'; return; }
+    cur = m; $('otitle').textContent = m.title;
+    var src = '/pic/' + m.slug + '/' + (m.state === 'review' || m.state === 'building' ? 'candidate' : 'ref1') + '?px=1200&v=' + m.stamp;
+    if ($('opic').getAttribute('src') !== src) $('opic').src = src;
+    var refs = $('orefs'); refs.textContent = '';
+    if (m.refs > 1 && m.state === 'draft') for (var i = 2; i <= m.refs; i++) { var t = el('img'); t.alt = ''; t.src = '/pic/' + m.slug + '/ref' + i + '?px=160'; refs.appendChild(t); }
+
+    var note = $('onote'), box = $('oact'), spacer = el('span', 'grow'); note.className = 'note'; box.textContent = '';
+    if (m.state === 'draft') {
+      note.textContent = 'Next: make the clean picture the model is built from.';
+      box.appendChild(button('Make picture', 'go', function () { act('picture'); })); box.appendChild(spacer); box.appendChild(menu([asIsItem, trashItem()]));
+    } else if (m.state === 'picturing') {
+      note.textContent = 'Making the picture, ' + clock(m.seconds || 0) + '. About a minute.';
+      box.appendChild(spacer); box.appendChild(menu([['Stop', function () { act('stop'); }]]));
+    } else if (m.state === 'review' && asking) {
+      box.appendChild(el('p', 'note ask', 'This uses the GPU for about 10 minutes.'));
+      box.appendChild(button('Start build', 'go', function () { act('build'); })); box.appendChild(button('Cancel', '', function () { asking = false; draw(cur); }));
+    } else if (m.state === 'review') {
+      note.textContent = ready && ready.reason ? ready.reason : 'Check it: whole subject in frame, plain background, nothing hidden.';
+      var go = button('Build 3D model', 'go', function () { if (ready && ready.ready) { asking = true; menuOpen = false; draw(cur); } });
+      go.setAttribute('aria-disabled', ready && ready.ready ? 'false' : 'true'); box.appendChild(go);
+      box.appendChild(button(m.made ? 'Redo picture' : 'Make picture', '', function () { act('picture'); }));
+      box.appendChild(spacer); box.appendChild(menu((m.made ? [asIsItem] : []).concat([trashItem()])));
+    } else if (m.state === 'building') {
+      note.innerHTML = ''; note.appendChild(document.createTextNode('Building, ' + clock(m.seconds || 0) + ' of about 10 minutes. ')); note.appendChild(el('span', 'mono', m.step || ''));
+      box.appendChild(spacer); box.appendChild(menu([['Stop build', function () { act('stop'); }]]));
+    }
+    if (m.error && (m.state === 'draft' || m.state === 'review') && !asking) { note.className = 'note bad'; note.textContent = (m.failed === 'build' ? 'The build stopped: ' : 'The picture did not finish: ') + m.error; }
+  }
+  function refresh() {
+    clearTimeout(timer); if (!cur) return;
+    var slug = cur.slug;
+    api('/api/models/' + slug).then(function (m) {
+      if (!cur || cur.slug !== slug) return;
+      var live = m.state === 'picturing' || m.state === 'building';
+      var next = function () { if (!(menuOpen || asking) || live) draw(m); else cur = m; timer = setTimeout(refresh, live ? 3000 : 10000); };
+      if (m.state === 'review') api('/api/check').then(function (c) { ready = c; next(); }).catch(function () { next(); }); else next();
+    }).catch(function (e) { fail(e); timer = setTimeout(refresh, 10000); });
+  }
+  document.addEventListener('click', function () { if (menuOpen) { menuOpen = false; trashArmed = false; if (cur) draw(cur); } });
+
+  /* ---------- routing ---------- */
+  function route() {
+    clearTimeout(timer); clearAlert(); cur = null; asking = false; menuOpen = false; trashArmed = false; ready = null;
+    var h = location.hash.slice(1), one = h.indexOf('m-') === 0;
+    $('list').hidden = h !== ''; $('new').hidden = h !== 'new'; $('one').hidden = !one; $('add').hidden = h === 'new';
+    if (h === 'new') showNew();
+    else if (one) { cur = { slug: h.slice(2) }; $('opic').removeAttribute('src'); $('otitle').textContent = ''; $('oact').textContent = ''; $('onote').textContent = ''; refresh(); }
+    else showList();
+  }
+  window.addEventListener('hashchange', route); route();
+})();
+</script>
+</body>
+</html>
